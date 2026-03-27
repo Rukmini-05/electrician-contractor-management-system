@@ -14,7 +14,6 @@
 <body class="bg-light">
 
 <!-- Navbar -->
-
 <nav class="navbar navbar-dark bg-primary">
 <div class="container">
 
@@ -31,8 +30,6 @@
 <div class="container mt-5">
 
 <h2 class="mb-4">Electrician Management</h2>
-
-<button class="btn btn-success mb-3">Add Electrician</button>
 
 <table class="table table-bordered table-striped">
 
@@ -51,29 +48,22 @@
 
 <tbody>
 
+{% for e in electricians %}
 <tr>
-<td>1</td>
-<td>Rukmini</td>
-<td>9876543210</td>
-<td>rukminiwagmode2005@gmail.com</td>
+<td>{{ e[0] }}</td>
+<td>{{ e[1] }}</td>
+<td>{{ e[2] }}</td>
+<td>{{ e[3] }}</td>
 <td>Active</td>
 <td>
-<button class="btn btn-warning btn-sm">Edit</button>
-<button class="btn btn-danger btn-sm">Delete</button>
-</td>
-</tr>
+<button class="btn btn-warning btn-sm" disabled>Edit</button>   
+<a href="/delete/{{ e[0] }}" class="btn btn-danger btn-sm">Delete</a>
+<a href="/" class="btn btn-warning">Logout</a>
 
-<tr>
-<td>2</td>
-<td>Ganesh</td>
-<td>9876501234</td>
-<td>ganesh@gmail.com</td>
-<td>Active</td>
-<td>
-<button class="btn btn-warning btn-sm">Edit</button>
-<button class="btn btn-danger btn-sm">Delete</button>
 </td>
+
 </tr>
+{% endfor %}
 
 </tbody>
 

@@ -24,26 +24,27 @@
 
 <h3 class="text-center mb-4">Register</h3>
 
-<form onsubmit="registerUser(event)">
+<!-- ✅ CONNECTED TO BACKEND -->
+<form action="/register" method="POST">
 
 <div class="mb-3">
 <label>Name</label>
-<input type="text" class="form-control" placeholder="Enter name" required>
+<input type="text" name="name" class="form-control" placeholder="Enter name" required>
 </div>
 
 <div class="mb-3">
 <label>Phone</label>
-<input type="text" class="form-control" placeholder="Enter phone number" required>
+<input type="text" name="phone" class="form-control" placeholder="Enter phone number" required>
 </div>
 
 <div class="mb-3">
 <label>Email</label>
-<input type="email" class="form-control" placeholder="Enter email" required>
+<input type="email" name="email" class="form-control" placeholder="Enter email" required>
 </div>
 
 <div class="mb-3">
 <label>Role</label>
-<select class="form-control">
+<select name="role" class="form-control">
 <option>Admin</option>
 <option>Electrician</option>
 </select>
@@ -51,7 +52,7 @@
 
 <div class="mb-3">
 <label>Password</label>
-<input type="password" class="form-control" placeholder="Enter password" required>
+<input type="password" name="password" class="form-control" placeholder="Enter password" required>
 </div>
 
 <button type="submit" class="btn btn-success w-100">Register</button>
@@ -70,20 +71,6 @@ Already have an account?
 </div>
 
 </div>
-
-<script>
-
-function registerUser(event){
-
-event.preventDefault();
-
-alert("Registration Successful!");
-
-window.location.href = "login.html";
-
-}
-
-</script>
 
 </body>
 </html>
