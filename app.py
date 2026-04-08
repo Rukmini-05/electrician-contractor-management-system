@@ -5,10 +5,11 @@ app = Flask(__name__)
 
 # ---------- DATABASE ----------
 def init_db():
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
-    
-    cursor.execute('''
+
+    # USERS TABLE (Electricians + Login)
+    cursor.execute("""
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
@@ -17,8 +18,38 @@ def init_db():
         role TEXT,
         password TEXT
     )
-    ''')
-    
+    """)
+
+    # JOBS TABLE
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS jobs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT,
+        description TEXT,
+        electrician_id INTEGER,
+        status TEXT
+    )
+    """)
+
+    # TASKS TABLE
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS tasks (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        job_id INTEGER,
+        task_name TEXT,
+        status TEXT
+    )
+    """)
+
+    # MATERIALS TABLE
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS materials (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        quantity INTEGER
+    )
+    """)
+
     conn.commit()
     conn.close()
 
@@ -32,12 +63,25 @@ def dashboard_page():
     cursor.execute("SELECT COUNT(*) FROM users WHERE role='Electrician'")
     total_users = cursor.fetchone()[0]
 
+    cursor.execute("SELECT COUNT(*) FROM jobs")
+    total_jobs = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM tasks WHERE status='Pending'")
+    pending_tasks = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM tasks WHERE status='Completed'")
+    completed_tasks = cursor.fetchone()[0]
+
     conn.close()
 
-    return render_template("dashboard.html", total_users=total_users)
+    return render_template("dashboard.html",
+                           total_users=total_users,
+                           total_jobs=total_jobs,
+                           pending_tasks=pending_tasks,
+                           completed_tasks=completed_tasks)
 
 
-# ---------- ELECTRICIANS (DYNAMIC) ----------
+# ---------- ELECTRICIANS ----------
 @app.route('/electricians.html')
 def electricians_page():
     conn = sqlite3.connect('database.db')
@@ -49,6 +93,131 @@ def electricians_page():
     conn.close()
 
     return render_template("electricians.html", electricians=electricians)
+
+
+# ---------- JOBS ----------
+def get_electricians():
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT id, name FROM users WHERE role='Electrician'")
+    electricians = cursor.fetchall()
+
+    conn.close()
+    return electricians
+
+
+@app.route('/jobs')
+def jobs():
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT jobs.id, jobs.title, jobs.description, jobs.status, users.name
+        FROM jobs
+        LEFT JOIN users ON jobs.electrician_id = users.id
+    """)
+
+    jobs = cursor.fetchall()
+    conn.close()
+
+    return render_template('jobs.html', jobs=jobs, electricians=get_electricians())
+
+
+@app.route('/add_job', methods=['POST'])
+def add_job():
+    title = request.form['title']
+    description = request.form['description']
+    electrician_id = request.form['electrician_id']
+    status = "Pending"
+
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "INSERT INTO jobs (title, description, electrician_id, status) VALUES (?, ?, ?, ?)",
+        (title, description, electrician_id, status)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect('/jobs')
+
+
+# ---------- TASKS ----------
+@app.route('/tasks')
+def tasks():
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT tasks.id, tasks.task_name, tasks.status, jobs.title
+        FROM tasks
+        LEFT JOIN jobs ON tasks.job_id = jobs.id
+    """)
+    tasks = cursor.fetchall()
+
+    cursor.execute("SELECT id, title FROM jobs")
+    jobs = cursor.fetchall()
+
+    conn.close()
+
+    return render_template('tasks.html', tasks=tasks, jobs=jobs)
+
+
+    # ---------- ADD TASK ----------
+@app.route('/add_task', methods=['POST'])
+def add_task():
+    job_id = request.form['job_id']
+    task_name = request.form['task_name']
+    status = "Pending"
+
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "INSERT INTO tasks (job_id, task_name, status) VALUES (?, ?, ?)",
+        (job_id, task_name, status)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect('/tasks')
+
+
+# ---------- MATERIALS ----------
+@app.route('/materials')
+def materials():
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM materials")
+    materials = cursor.fetchall()
+
+    conn.close()
+
+    return render_template('materials.html', materials=materials)
+
+
+@app.route('/add_material', methods=['POST'])
+def add_material():
+    name = request.form['name']
+    quantity = request.form['quantity']
+
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "INSERT INTO materials (name, quantity) VALUES (?, ?)",
+        (name, quantity)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect('/materials')
 
 
 # ---------- STATIC PAGES ----------
@@ -65,16 +234,16 @@ def register_page():
     return send_from_directory('.', 'register.html')
 
 @app.route('/jobs.html')
-def jobs_page():
-    return send_from_directory('.', 'jobs.html')
+def jobs_redirect():
+    return redirect('/jobs')
 
 @app.route('/tasks.html')
-def tasks_page():
-    return send_from_directory('.', 'tasks.html')
+def tasks_redirect():
+    return redirect('/tasks')
 
 @app.route('/materials.html')
-def materials_page():
-    return send_from_directory('.', 'materials.html')
+def materials_redirect():
+    return redirect('/materials')
 
 @app.route('/reports.html')
 def reports_page():
@@ -126,7 +295,9 @@ def login():
         return redirect('/dashboard.html')
     else:
         return "Invalid Email or Password"
-    
+
+
+# ---------- DELETE ----------
 @app.route('/delete/<int:id>')
 def delete_user(id):
     conn = sqlite3.connect('database.db')
@@ -141,6 +312,6 @@ def delete_user(id):
 
 
 # ---------- RUN ----------
-if __name__ == '__main__':
+if __name__ == "__main__":
     init_db()
     app.run(debug=True)
