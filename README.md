@@ -1,62 +1,75 @@
-# electrician-contractor-management-system
-
-
 Electrician Contractor Management System
 
- Project Overview
-This project is a frontend UI design for an Electrician Contractor Management System.  
-It helps manage electricians, jobs, tasks, materials, and reports in one dashboard.
+A full-stack web application to manage electricians, jobs, tasks, materials, and reports efficiently.
 
-This project was developed using:
-- HTML
-- CSS
-- JavaScript
-- Bootstrap
+Project Overview
+This project is developed using **Flask (Python)** and **SQLite** for backend, and **HTML, CSS, Bootstrap** for frontend.
+It helps contractors manage daily operations such as assigning jobs, tracking tasks, managing materials, and viewing reports — all in one system.
 
  Features
+ Electrician Management
+- Add electricians
+- View electrician list
+- Delete electricians
 
-- User Login and Registration
-- Dashboard with summary cards
-- Electrician Management
-- Job Management
-- Task Tracking
-- Materials Management
-- Reports Section
-- Admin Profile Page
+ Job Management
+- Create jobs
+- Assign jobs to electricians
+- View job details with status
 
- Project Pages
+ Task Tracking
+- Assign tasks to jobs
+- Track task status (Pending / Completed)
+- Filter tasks by status
 
-1. Home Page
-2. Login Page
-3. Registration Page
-4. Dashboard
-5. Electrician Management
-6. Job Management
-7. Task Tracking
-8. Materials Page
-9. Reports Page
-10. Profile Page
+  Materials Management
+- Add materials with quantity
+- View materials inventory
 
-Folder Structure
+  Search & Filter
+- Search jobs easily
+- Filter tasks dynamically
 
-electrician-contractor-management-system
+  Reports Dashboard
+- Total electricians
+- Total jobs
+- Pending tasks
+- Completed tasks
+
+  Authentication
+- User registration
+- User login system
+
+  Technologies Used
+- **Frontend:** HTML, CSS, Bootstrap  
+- **Backend:** Python (Flask)  
+- **Database:** SQLite  
+- **Version Control:** Git & GitHub  
+
+ Project Structure
+electrician-contractor-management-system/
+│
+├── app.py
+├── database.db
+│
+├── templates/
+│ ├── dashboard.html
+│ ├── electricians.html
+│ ├── jobs.html
+│ ├── tasks.html
+│ ├── materials.html
+│ ├── reports.html
+│
+├── css/
+│ └── style.css
 │
 ├── index.html
 ├── login.html
 ├── register.html
-├── dashboard.html
-├── electricians.html
-├── jobs.html
-├── tasks.html
-├── materials.html
-├── reports.html
-├── profile.html
-│
-├── css
-│ └── style.css
-│
-├── js
-│ └── script.js
+└── README.md
+
+Conclusion
+This system simplifies electrician and contractor management by organizing tasks, jobs, and materials in a structured and user-friendly way.
 
 Author
 Rukmini Wagmode
