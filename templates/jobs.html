@@ -41,8 +41,13 @@
     <!-- JOB LIST -->
     <h2 class="text-center text-success mb-4">All Jobs</h2>
 
+    <!-- 🔍 SEARCH BOX -->
+    <div class="mb-3">
+        <input type="text" id="searchInput" class="form-control" placeholder="Search Job Title...">
+    </div>
+
     <div class="table-responsive">
-        <table class="table table-bordered table-striped shadow-sm">
+        <table id="jobsTable" class="table table-bordered table-striped shadow-sm">
 
             <thead class="table-dark">
                 <tr>
@@ -72,6 +77,24 @@
     </div>
 
 </div>
+
+<!-- 🔍 SEARCH SCRIPT -->
+<script>
+document.getElementById("searchInput").addEventListener("keyup", function() {
+    let input = this.value.toLowerCase();
+    let rows = document.querySelectorAll("#jobsTable tbody tr");
+
+    rows.forEach(row => {
+        let title = row.cells[1].innerText.toLowerCase();
+
+        if (title.includes(input)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+});
+</script>
 
 </body>
 </html>

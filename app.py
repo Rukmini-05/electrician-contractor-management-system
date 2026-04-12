@@ -8,7 +8,6 @@ def init_db():
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
 
-    # USERS TABLE (Electricians + Login)
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -20,7 +19,6 @@ def init_db():
     )
     """)
 
-    # JOBS TABLE
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS jobs (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -31,7 +29,6 @@ def init_db():
     )
     """)
 
-    # TASKS TABLE
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS tasks (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -41,7 +38,6 @@ def init_db():
     )
     """)
 
-    # MATERIALS TABLE
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS materials (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -99,10 +95,8 @@ def electricians_page():
 def get_electricians():
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
-
     cursor.execute("SELECT id, name FROM users WHERE role='Electrician'")
     electricians = cursor.fetchall()
-
     conn.close()
     return electricians
 
@@ -126,17 +120,12 @@ def jobs():
 
 @app.route('/add_job', methods=['POST'])
 def add_job():
-    title = request.form['title']
-    description = request.form['description']
-    electrician_id = request.form['electrician_id']
-    status = "Pending"
-
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
 
     cursor.execute(
         "INSERT INTO jobs (title, description, electrician_id, status) VALUES (?, ?, ?, ?)",
-        (title, description, electrician_id, status)
+        (request.form['title'], request.form['description'], request.form['electrician_id'], "Pending")
     )
 
     conn.commit()
@@ -166,19 +155,14 @@ def tasks():
     return render_template('tasks.html', tasks=tasks, jobs=jobs)
 
 
-    # ---------- ADD TASK ----------
 @app.route('/add_task', methods=['POST'])
 def add_task():
-    job_id = request.form['job_id']
-    task_name = request.form['task_name']
-    status = "Pending"
-
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
 
     cursor.execute(
         "INSERT INTO tasks (job_id, task_name, status) VALUES (?, ?, ?)",
-        (job_id, task_name, status)
+        (request.form['job_id'], request.form['task_name'], "Pending")
     )
 
     conn.commit()
@@ -203,15 +187,12 @@ def materials():
 
 @app.route('/add_material', methods=['POST'])
 def add_material():
-    name = request.form['name']
-    quantity = request.form['quantity']
-
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
 
     cursor.execute(
         "INSERT INTO materials (name, quantity) VALUES (?, ?)",
-        (name, quantity)
+        (request.form['name'], request.form['quantity'])
     )
 
     conn.commit()
@@ -220,95 +201,37 @@ def add_material():
     return redirect('/materials')
 
 
-# ---------- STATIC PAGES ----------
+# ---------- REPORTS ----------
+@app.route('/reports')
+def reports():
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT COUNT(*) FROM users WHERE role='Electrician'")
+    total_users = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM jobs")
+    total_jobs = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM tasks WHERE status='Pending'")
+    pending_tasks = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM tasks WHERE status='Completed'")
+    completed_tasks = cursor.fetchone()[0]
+
+    conn.close()
+
+    return render_template("reports.html",
+                           total_users=total_users,
+                           total_jobs=total_jobs,
+                           pending_tasks=pending_tasks,
+                           completed_tasks=completed_tasks)
+
+
+# ---------- STATIC ----------
 @app.route('/')
 def home():
     return send_from_directory('.', 'index.html')
-
-@app.route('/login.html')
-def login_page():
-    return send_from_directory('.', 'login.html')
-
-@app.route('/register.html')
-def register_page():
-    return send_from_directory('.', 'register.html')
-
-@app.route('/jobs.html')
-def jobs_redirect():
-    return redirect('/jobs')
-
-@app.route('/tasks.html')
-def tasks_redirect():
-    return redirect('/tasks')
-
-@app.route('/materials.html')
-def materials_redirect():
-    return redirect('/materials')
-
-@app.route('/reports.html')
-def reports_page():
-    return send_from_directory('.', 'reports.html')
-
-@app.route('/profile.html')
-def profile_page():
-    return send_from_directory('.', 'profile.html')
-
-
-# ---------- REGISTER ----------
-@app.route('/register', methods=['POST'])
-def register():
-    name = request.form['name']
-    phone = request.form['phone']
-    email = request.form['email']
-    role = request.form['role']
-    password = request.form['password']
-
-    conn = sqlite3.connect('database.db')
-    cursor = conn.cursor()
-
-    cursor.execute(
-        "INSERT INTO users (name, phone, email, role, password) VALUES (?, ?, ?, ?, ?)",
-        (name, phone, email, role, password)
-    )
-
-    conn.commit()
-    conn.close()
-
-    return redirect('/login.html')
-
-
-# ---------- LOGIN ----------
-@app.route('/login', methods=['POST'])
-def login():
-    email = request.form['email']
-    password = request.form['password']
-
-    conn = sqlite3.connect('database.db')
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT * FROM users WHERE email=? AND password=?", (email, password))
-    user = cursor.fetchone()
-
-    conn.close()
-
-    if user:
-        return redirect('/dashboard.html')
-    else:
-        return "Invalid Email or Password"
-
-
-# ---------- DELETE ----------
-@app.route('/delete/<int:id>')
-def delete_user(id):
-    conn = sqlite3.connect('database.db')
-    cursor = conn.cursor()
-
-    cursor.execute("DELETE FROM users WHERE id=?", (id,))
-
-    conn.commit()
-    conn.close()
-
-    return redirect('/electricians.html')
 
 
 # ---------- RUN ----------
