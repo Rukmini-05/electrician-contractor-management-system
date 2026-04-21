@@ -1,75 +1,84 @@
-Electrician Contractor Management System
+ Electrician Contractor Management System
 
-A full-stack web application to manage electricians, jobs, tasks, materials, and reports efficiently.
+A full-stack web application** to manage electricians, jobs, tasks, materials, and reports efficiently.
 
-Project Overview
-This project is developed using **Flask (Python)** and **SQLite** for backend, and **HTML, CSS, Bootstrap** for frontend.
-It helps contractors manage daily operations such as assigning jobs, tracking tasks, managing materials, and viewing reports — all in one system.
+ Project Overview
+This project is built using **Flask (Python)** and **SQLite** for the backend, and **HTML, CSS, Bootstrap** for the frontend.
+
+It helps contractors manage daily operations like:
+* Assigning jobs
+* Tracking tasks
+* Managing materials
+* Viewing reports
 
  Features
+
  Electrician Management
-- Add electricians
-- View electrician list
-- Delete electricians
+* Add electricians
+* View electrician list
+* Delete electricians
 
  Job Management
-- Create jobs
-- Assign jobs to electricians
-- View job details with status
+* Create jobs
+* Assign jobs to electricians
+* View job details with status
 
- Task Tracking
-- Assign tasks to jobs
-- Track task status (Pending / Completed)
-- Filter tasks by status
+Task Tracking
+* Assign tasks to jobs
+* Track task status (**Pending / Completed**)
+* Filter tasks dynamically
 
-  Materials Management
-- Add materials with quantity
-- View materials inventory
+Materials Management
+* Add materials with quantity
+* View materials inventory
 
-  Search & Filter
-- Search jobs easily
-- Filter tasks dynamically
+Search & Filter
+* Search jobs easily
+* Filter tasks by status
 
-  Reports Dashboard
-- Total electricians
-- Total jobs
-- Pending tasks
-- Completed tasks
+Reports Dashboard
+* Total electricians
+* Total jobs
+* Pending tasks
+* Completed tasks
 
-  Authentication
-- User registration
-- User login system
+ Authentication
+* User registration
+* Secure login system
 
-  Technologies Used
-- **Frontend:** HTML, CSS, Bootstrap  
-- **Backend:** Python (Flask)  
-- **Database:** SQLite  
-- **Version Control:** Git & GitHub  
+ Technologies Used
+
+| Layer           | Technology           |
+| --------------- | -------------------- |
+| Frontend        | HTML, CSS, Bootstrap |
+| Backend         | Python (Flask)       |
+| Database        | SQLite               |
+| Version Control | Git & GitHub         |
 
  Project Structure
+
+
 electrician-contractor-management-system/
 │
 ├── app.py
-├── database.db
+├── README.md
+├── .gitignore
 │
 ├── templates/
-│ ├── dashboard.html
-│ ├── electricians.html
-│ ├── jobs.html
-│ ├── tasks.html
-│ ├── materials.html
-│ ├── reports.html
+│   ├── dashboard.html
+│   ├── electricians.html
+│   ├── jobs.html
+│   ├── tasks.html
+│   ├── materials.html
+│   └── reports.html
 │
 ├── css/
-│ └── style.css
+│   └── style.css
 │
 ├── index.html
 ├── login.html
-├── register.html
-└── README.md
-
-Conclusion
-This system simplifies electrician and contractor management by organizing tasks, jobs, and materials in a structured and user-friendly way.
+└── register.html
 
 Author
-Rukmini Wagmode
+**Rukmini Wagmode**
+
