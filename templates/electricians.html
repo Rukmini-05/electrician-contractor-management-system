@@ -1,14 +1,110 @@
-<input type="text" id="searchElectrician" class="form-control mb-3" placeholder="Search Electrician...">
+<!DOCTYPE html>
+<html lang="en">
+<head>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Electricians</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    table tr:hover {
+        background-color: #f2f2f2;
+        transition: 0.3s;
+    }
+</style>
+
+</head>
+
+<body class="bg-light">
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<div class="container">
+    <a class="navbar-brand">⚡ EMS</a>
+
+    <div>
+        <a href="/dashboard.html" class="btn btn-outline-light btn-sm">Dashboard</a>
+        <a href="/electricians.html" class="btn btn-outline-light btn-sm">Electricians</a>
+        <a href="/jobs" class="btn btn-outline-light btn-sm">Jobs</a>
+        <a href="/tasks" class="btn btn-outline-light btn-sm">Tasks</a>
+        <a href="/materials" class="btn btn-outline-light btn-sm">Materials</a>
+        <a href="/reports" class="btn btn-outline-light btn-sm">Reports</a>
+        <a href="/" class="btn btn-warning btn-sm">Logout</a>
+    </div>
+</div>
+</nav>
+
+<div class="container mt-4">
+
+    <!-- HEADER -->
+    <h2 class="text-center text-primary fw-bold">👷 Electrician Management</h2>
+    <p class="text-center text-muted">View and manage electricians</p>
+
+    <!-- SEARCH -->
+    <div class="mb-3">
+        <input type="text" id="searchInput" class="form-control" placeholder="Search Electrician...">
+    </div>
+
+    <!-- TABLE -->
+    <div class="card shadow-lg p-4">
+        <div class="table-responsive">
+
+            <table class="table table-hover table-bordered" id="electricianTable">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                {% for e in electricians %}
+                <tr>
+                    <td>{{ e[0] }}</td>
+                    <td>{{ e[1] }}</td>
+                    <td>{{ e[2] }}</td>
+                    <td>{{ e[3] }}</td>
+                    <td><span class="badge bg-success">Active</span></td>
+                    <td>
+                        <a href="/delete/{{ e[0] }}" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- SEARCH SCRIPT -->
 <script>
-document.getElementById("searchElectrician").addEventListener("keyup", function() {
-let input = this.value.toLowerCase();
-let rows = document.querySelectorAll("table tbody tr");
+document.getElementById("searchInput").addEventListener("keyup", function() {
+    let filter = this.value.toLowerCase();
+    let rows = document.querySelectorAll("#electricianTable tbody tr");
 
-rows.forEach(row => {
-let name = row.cells[1].innerText.toLowerCase();
-
-row.style.display = name.includes(input) ? "" : "none";
-});
+    rows.forEach(row => {
+        let name = row.cells[1].innerText.toLowerCase();
+        row.style.display = name.includes(filter) ? "" : "none";
+    });
 });
 </script>
+
+</body>
+</html>

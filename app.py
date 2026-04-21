@@ -1,5 +1,6 @@
 import sqlite3
 from flask import Flask, send_from_directory, request, redirect, render_template
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
@@ -50,6 +51,58 @@ def init_db():
     conn.close()
 
 
+# ---------- REGISTER (UPDATED) ----------
+@app.route('/register', methods=['POST'])
+def register():
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+
+    password = generate_password_hash(request.form['password'])
+
+    cursor.execute(
+        "INSERT INTO users (name, phone, email, role, password) VALUES (?, ?, ?, ?, ?)",
+        (
+            request.form['name'],
+            request.form['phone'],
+            request.form['email'],
+            request.form['role'],
+            password
+        )
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect('/login.html')
+
+
+# ---------- LOGIN (UPDATED) ----------
+@app.route('/login', methods=['POST'])
+def login():
+    email = request.form['email']
+    password = request.form['password']
+
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM users WHERE email=?", (email,))
+    user = cursor.fetchone()
+
+    conn.close()
+
+    if user and check_password_hash(user[5], password):
+
+        role = user[4]
+
+        if role == "Admin":
+            return redirect('/dashboard.html')
+        else:
+            return redirect('/tasks')
+
+    else:
+        return "Invalid Email or Password"
+
+
 # ---------- DASHBOARD ----------
 @app.route('/dashboard.html')
 def dashboard_page():
@@ -83,12 +136,30 @@ def electricians_page():
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
 
-    cursor.execute("SELECT id, name, phone, email FROM users WHERE role='Electrician'")
+    # FIX: make role check case-insensitive
+    cursor.execute("""
+        SELECT id, name, phone, email 
+        FROM users 
+        WHERE LOWER(role) = 'electrician'
+    """)
+    
     electricians = cursor.fetchall()
 
     conn.close()
 
     return render_template("electricians.html", electricians=electricians)
+
+
+@app.route('/delete/<int:id>')
+def delete_user(id):
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+
+    cursor.execute("DELETE FROM users WHERE id=?", (id,))
+    conn.commit()
+    conn.close()
+
+    return redirect('/electricians.html')
 
 
 # ---------- JOBS ----------
@@ -232,6 +303,14 @@ def reports():
 @app.route('/')
 def home():
     return send_from_directory('.', 'index.html')
+
+@app.route('/login.html')
+def login_page():
+    return send_from_directory('.', 'login.html')
+
+@app.route('/register.html')
+def register_page():
+    return send_from_directory('.', 'register.html')
 
 
 # ---------- RUN ----------

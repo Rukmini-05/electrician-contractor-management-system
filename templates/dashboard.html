@@ -8,97 +8,70 @@
 <title>Dashboard</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+body { font-family: 'Segoe UI', sans-serif; }
+.card:hover { transform: scale(1.03); transition: 0.3s; }
+</style>
 
 </head>
 
 <body class="bg-light">
 
-<!-- Navbar -->
-
-<nav class="navbar navbar-dark bg-primary">
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg" style="background: linear-gradient(90deg,#1e3c72,#2a5298);">
 <div class="container">
+<a class="navbar-brand text-white fw-bold">⚡ EMS</a>
 
-<a class="navbar-brand">Electrician Management System</a>
-
-<a href="index.html" class="btn btn-light">Logout</a>
-
+<div>
+<a href="/jobs" class="btn btn-light btn-sm">Jobs</a>
+<a href="/tasks" class="btn btn-light btn-sm">Tasks</a>
+<a href="/materials" class="btn btn-light btn-sm">Materials</a>
+<a href="/reports" class="btn btn-light btn-sm">Reports</a>
+<a href="/" class="btn btn-warning btn-sm">Logout</a>
+</div>
 </div>
 </nav>
 
-
 <div class="container mt-5">
 
-<h2 class="mb-4">Dashboard</h2>
+<h2 class="text-center mb-4"><i class="fas fa-chart-line"></i> Dashboard</h2>
 
 <div class="row">
 
-<!-- Total Electricians -->
-
 <div class="col-md-3">
-
-<div class="card text-white bg-primary mb-3">
-
-<div class="card-body">
+<div class="card bg-primary text-white p-3">
 <h5>Total Electricians</h5>
 <h2>{{ total_users }}</h2>
 </div>
-
 </div>
-
-</div>
-
-
-<!-- Active Jobs -->
 
 <div class="col-md-3">
-
-<div class="card text-white bg-success mb-3">
-
-<div class="card-body">
-<h5>Active Jobs</h5>
-<h2>12</h2>
+<div class="card bg-success text-white p-3">
+<h5>Total Jobs</h5>
+<h2>{{ total_jobs }}</h2>
 </div>
-
 </div>
-
-</div>
-
-
-<!-- Pending Tasks -->
 
 <div class="col-md-3">
-
-<div class="card text-dark bg-warning mb-3">
-
-<div class="card-body">
+<div class="card bg-warning text-dark p-3">
 <h5>Pending Tasks</h5>
-<h2>8</h2>
+<h2>{{ pending_tasks }}</h2>
 </div>
-
 </div>
-
-</div>
-
-
-<!-- Completed Work -->
 
 <div class="col-md-3">
-
-<div class="card text-white bg-info mb-3">
-
-<div class="card-body">
-<h5>Completed Work</h5>
-<h2>30</h2>
+<div class="card bg-info text-white p-3">
+<h5>Completed Tasks</h5>
+<h2>{{ completed_tasks }}</h2>
 </div>
-
-<div class="alert alert-info text-center">
-🔔 New Task Assigned | ⚡ Job Updated | ✅ Task Completed
 </div>
 
 </div>
 
-</div>
-
+<div class="alert alert-info text-center mt-4">
+🔔 Pending Tasks: {{ pending_tasks }} | ⚡ Total Jobs: {{ total_jobs }} | ✅ Completed: {{ completed_tasks }}
 </div>
 
 </div>
