@@ -1,54 +1,277 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Login</title>
+<title>Login | VoltiX</title>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+
+    height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:
+    linear-gradient(
+        135deg,
+        #0f172a,
+        #111827,
+        #1e1b4b,
+        #312e81
+    );
+
+    overflow:hidden;
+
+    position:relative;
+}
+
+body::before{
+
+    content:'';
+
+    position:absolute;
+
+    width:500px;
+    height:500px;
+
+    background:#2563eb;
+
+    border-radius:50%;
+
+    top:-200px;
+    left:-150px;
+
+    filter:blur(120px);
+
+    opacity:0.4;
+}
+
+body::after{
+
+    content:'';
+
+    position:absolute;
+
+    width:500px;
+    height:500px;
+
+    background:#7c3aed;
+
+    border-radius:50%;
+
+    bottom:-200px;
+    right:-150px;
+
+    filter:blur(120px);
+
+    opacity:0.4;
+}
+
+.container{
+
+    position:relative;
+    z-index:1;
+
+    width:420px;
+
+    background:rgba(17,24,39,0.82);
+
+    border:1px solid rgba(255,255,255,0.1);
+
+    backdrop-filter:blur(15px);
+
+    padding:40px;
+
+    border-radius:25px;
+
+    box-shadow:0 8px 40px rgba(0,0,0,0.5);
+
+    color:white;
+}
+
+.logo{
+    text-align:center;
+    font-size:42px;
+    margin-bottom:10px;
+}
+
+h1{
+    text-align:center;
+    font-size:34px;
+    margin-bottom:8px;
+}
+
+.subtitle{
+    text-align:center;
+    color:#cbd5e1;
+    margin-bottom:35px;
+    font-size:14px;
+}
+
+.input-box{
+    margin-bottom:22px;
+}
+
+.input-box label{
+    display:block;
+    margin-bottom:8px;
+    color:#d1d5db;
+    font-size:14px;
+}
+
+.input-box input{
+
+    width:100%;
+
+    padding:15px;
+
+    border:none;
+    outline:none;
+
+    border-radius:14px;
+
+    background:rgba(255,255,255,0.08);
+
+    color:white;
+
+    font-size:15px;
+}
+
+.input-box input::placeholder{
+    color:#94a3b8;
+}
+
+button{
+
+    width:100%;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:linear-gradient(90deg,#2563eb,#7c3aed);
+
+    color:white;
+
+    font-size:16px;
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 6px 20px rgba(99,102,241,0.5);
+}
+
+.bottom-text{
+
+    text-align:center;
+
+    margin-top:25px;
+
+    color:#cbd5e1;
+}
+
+.bottom-text a{
+
+    color:#60a5fa;
+
+    text-decoration:none;
+
+    font-weight:600;
+}
+
+.bottom-text a:hover{
+    text-decoration:underline;
+}
+
+</style>
 
 </head>
 
-<body class="bg-light">
+<body>
 
 <div class="container">
 
-<div class="row justify-content-center mt-5">
+<div class="logo">
+⚡
+</div>
 
-<div class="col-md-4">
+<h1>VoltiX</h1>
 
-<div class="card p-4 shadow">
+<p class="subtitle">
+Login to manage electrician operations
+</p>
 
-<h3 class="text-center mb-4">Login</h3>
-
-<!-- ✅ CONNECTED TO BACKEND -->
 <form action="/login" method="POST">
 
-<div class="mb-3">
+<div class="input-box">
+
 <label>Email</label>
-<input type="email" name="email" class="form-control" placeholder="Enter email" required>
+
+<input
+type="email"
+name="email"
+placeholder="Enter your email"
+required>
+
 </div>
 
-<div class="mb-3">
+<div class="input-box">
+
 <label>Password</label>
-<input type="password" name="password" class="form-control" placeholder="Enter password" required>
+
+<input
+type="password"
+name="password"
+placeholder="Enter your password"
+required>
+
 </div>
 
-<button type="submit" class="btn btn-primary w-100">Login</button>
+<button type="submit">
+
+Login Now
+
+</button>
 
 </form>
 
-<p class="text-center mt-3">
-Don't have an account?  
-<a href="register.html">Register</a>
-</p>
+<div class="bottom-text">
 
-</div>
+Don't have an account?
 
-</div>
+<a href="/register.html">
+
+Register
+
+</a>
 
 </div>
 
