@@ -1,105 +1,270 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Tasks</title>
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        select {
-            height: 40px;   /* FIXES BIG DROPDOWN ISSUE */
-        }
-    </style>
+<title>Tasks</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="/static/css/style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 </head>
 
-<body class="bg-light">
+<body>
 
-<div class="container mt-5">
+<!-- SIDEBAR -->
+<div class="sidebar">
 
-    <!-- ADD TASK -->
-    <h2 class="text-center text-success mb-4">Add Task</h2>
+<h3>⚡ ContractorPro</h3>
 
-    <form action="/add_task" method="POST" class="card p-4 shadow-sm">
+<a href="/dashboard.html">🏠 Dashboard</a>
 
-        <div class="mb-3">
-            <label class="form-label">Select Job</label>
-            <select name="job_id" class="form-select" required>
-                {% for job in jobs %}
-                    <option value="{{ job[0] }}">{{ job[1] }}</option>
-                {% endfor %}
-            </select>
-        </div>
+<a href="/electricians.html">👷 Electricians</a>
 
-        <div class="mb-3">
-            <input type="text" name="task_name" class="form-control" placeholder="Task Name" required>
-        </div>
+<a href="/jobs">💼 Jobs</a>
 
-        <button type="submit" class="btn btn-success w-100">Add Task</button>
-    </form>
+<a href="/tasks">📋 Tasks</a>
 
-    <hr class="my-5">
+<a href="/materials">🧰 Materials</a>
 
-    <!-- FILTER -->
-    <div class="row mb-3">
-        <div class="col-md-4">
-            <select id="taskFilter" class="form-select">
-                <option value="">All Tasks</option>
-                <option value="Pending">Pending</option>
-                <option value="Completed">Completed</option>
-            </select>
-        </div>
-    </div>
+<a href="/reports">📊 Reports</a>
 
-    <!-- TASK LIST -->
-    <h2 class="text-center text-primary mb-4">All Tasks</h2>
+<a href="/payments">💳 Payments</a>
 
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped shadow-sm">
+<a href="/profile">👤 Profile</a>
 
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Task</th>
-                    <th>Job</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
+<a href="/" class="text-warning">🚪 Logout</a>
 
-            <tbody>
-                {% for task in tasks %}
-                <tr>
-                    <td>{{ task[0] }}</td>
-                    <td>{{ task[1] }}</td>
-                    <td>{{ task[3] }}</td>
-                    <td>
-                        <span class="badge bg-info text-dark">{{ task[2] }}</span>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
+</div>
 
-        </table>
-    </div>
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
+<!-- HEADER -->
+<div class="mb-4">
+
+<h2 class="fw-bold">
+📋 Task Management
+</h2>
+
+<p class="text-muted">
+Manage and monitor all project tasks
+</p>
+
+</div>
+
+<!-- ADD TASK -->
+<div class="card p-4 mb-4">
+
+<h4 class="mb-4">
+➕ Add New Task
+</h4>
+
+<form action="/add_task" method="POST">
+
+<div class="mb-3">
+
+<label class="form-label">
+Select Job
+</label>
+
+<select
+    name="job_id"
+    class="form-select"
+    required
+>
+
+{% for job in jobs %}
+
+<option value="{{ job[0] }}">
+{{ job[1] }}
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+<div class="mb-4">
+
+<label class="form-label">
+Task Name
+</label>
+
+<input
+    type="text"
+    name="task_name"
+    class="form-control"
+    placeholder="Enter Task Name"
+    required
+>
+
+</div>
+
+<button
+    type="submit"
+    class="btn btn-success w-100"
+>
+
+Add Task
+
+</button>
+
+</form>
+
+</div>
+
+<!-- FILTER -->
+<div class="card p-4 mb-4">
+
+<div class="row">
+
+<div class="col-md-4">
+
+<select
+    id="taskFilter"
+    class="form-select"
+>
+
+<option value="">
+All Tasks
+</option>
+
+<option value="Pending">
+Pending
+</option>
+
+<option value="Completed">
+Completed
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- TASK LIST -->
+<div class="card p-4">
+
+<h4 class="mb-4">
+📑 All Tasks
+</h4>
+
+<div class="table-responsive">
+
+<table class="table align-middle">
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+<th>Task</th>
+<th>Job</th>
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for task in tasks %}
+
+<tr>
+
+<td>{{ task[0] }}</td>
+
+<td>{{ task[1] }}</td>
+
+<td>{{ task[3] }}</td>
+
+<td>
+
+{% if task[2] == "Completed" %}
+
+<span class="badge bg-success">
+Completed
+</span>
+
+{% else %}
+
+<span class="badge bg-warning text-dark">
+Pending
+</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
 
 </div>
 
 <!-- FILTER SCRIPT -->
 <script>
-document.getElementById("taskFilter").addEventListener("change", function() {
-    let value = this.value.toLowerCase();
-    let rows = document.querySelectorAll("table tbody tr");
+
+document
+.getElementById("taskFilter")
+.addEventListener("change", function(){
+
+    let value =
+    this.value.toLowerCase();
+
+    let rows =
+    document.querySelectorAll(
+        "table tbody tr"
+    );
 
     rows.forEach(row => {
-        let status = row.cells[3].innerText.toLowerCase();
 
-        if (value === "" || status.includes(value)) {
+        let status =
+        row.cells[3]
+        .innerText
+        .toLowerCase();
+
+        if(
+            value === ""
+            ||
+            status.includes(value)
+        ){
+
             row.style.display = "";
-        } else {
+
+        }else{
+
             row.style.display = "none";
+
         }
+
     });
+
 });
+
 </script>
 
 </body>

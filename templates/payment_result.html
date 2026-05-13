@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Payment Result</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background: linear-gradient(to right,#eef2ff,#f8fbff);
+    min-height: 100vh;
+}
+
+/* DARK MODE */
+.dark-mode{
+    background:#121212 !important;
+    color:white !important;
+}
+
+.dark-mode .card{
+    background:#1f1f1f;
+    color:white;
+}
+
+.dark-mode .alert-dark{
+    background:#2c2c2c;
+    color:white;
+    border:none;
+}
+
+.dark-mode .toast{
+    background:#1f1f1f !important;
+    color:white !important;
+}
+
+/* PAYMENT CARD */
+.payment-card{
+    max-width:500px;
+    margin:auto;
+    margin-top:60px;
+    border-radius:25px;
+    border:none;
+    overflow:hidden;
+}
+
+/* SUCCESS ICON */
+.success-icon{
+    font-size:80px;
+    color:#28a745;
+}
+
+/* FAILED ICON */
+.failed-icon{
+    font-size:80px;
+    color:#dc3545;
+}
+
+/* BUTTONS */
+.back-btn{
+    border-radius:15px;
+    padding:12px;
+    font-weight:600;
+    transition:0.3s;
+}
+
+.back-btn:hover{
+    transform:scale(1.02);
+}
+
+/* TRANSACTION BOX */
+.transaction-box{
+    border-radius:15px;
+    font-size:16px;
+    font-weight:500;
+}
+
+/* CARD SHADOW */
+.shadow-custom{
+    box-shadow:0px 10px 30px rgba(0,0,0,0.08);
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+
+    .payment-card{
+        margin-top:30px;
+        padding:20px !important;
+    }
+
+    h2{
+        font-size:24px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container-fluid px-3 px-md-5">
+
+<!-- DARK MODE BUTTON -->
+<div class="text-end mt-3">
+
+<button onclick="toggleDarkMode()"
+        class="btn btn-dark rounded-pill px-4">
+
+🌙 Dark Mode
+
+</button>
+
+</div>
+
+<!-- PAYMENT CARD -->
+<div class="card payment-card shadow-custom p-5 text-center">
+
+{% if status == "Success" %}
+
+<div class="success-icon">
+✅
+</div>
+
+<h2 class="text-success mt-3 fw-bold">
+Payment Successful
+</h2>
+
+<div class="alert alert-success mt-4">
+💰 Amount transferred successfully.
+</div>
+
+{% else %}
+
+<div class="failed-icon">
+❌
+</div>
+
+<h2 class="text-danger mt-3 fw-bold">
+Payment Failed
+</h2>
+
+<div class="alert alert-danger mt-4">
+⚠ Transaction could not be completed.
+</div>
+
+{% endif %}
+
+<hr class="my-4">
+
+<h5>
+Receiver Name
+<br>
+<b>{{ payer_name }}</b>
+</h5>
+
+<h5 class="mt-4">
+Amount
+<br>
+<b>₹ {{ amount }}</b>
+</h5>
+
+<h5 class="mt-4">
+Transaction ID
+</h5>
+
+<div class="alert alert-dark mt-2 transaction-box">
+{{ transaction_id }}
+</div>
+
+<!-- DOWNLOAD RECEIPT -->
+<a href="/download_receipt/{{ transaction_id }}"
+   class="btn btn-success back-btn mt-3 w-100">
+
+📄 Download Receipt PDF
+
+</a>
+
+<!-- BACK BUTTON -->
+<a href="/payments"
+   class="btn btn-primary back-btn mt-3 w-100">
+
+⬅ Back to Payments
+
+</a>
+
+</div>
+
+</div>
+
+
+<!-- TOAST NOTIFICATION -->
+<div class="toast-container position-fixed top-0 end-0 p-3">
+
+<div id="paymentToast"
+     class="toast show align-items-center bg-white text-dark border shadow"
+     role="alert">
+
+<div class="d-flex">
+
+<div class="toast-body fw-semibold">
+
+🔔 {{ notification }}
+
+</div>
+
+<button type="button"
+        class="btn-close me-2 m-auto"
+        data-bs-dismiss="toast">
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+/* DARK MODE */
+function toggleDarkMode(){
+
+    document.body.classList.toggle("dark-mode");
+
+}
+
+/* TOAST AUTO HIDE AFTER 3 MINUTES */
+setTimeout(() => {
+
+    const toast = document.getElementById("paymentToast");
+
+    toast.style.display = "none";
+
+}, 180000);
+
+</script>
+
+</body>
+</html>

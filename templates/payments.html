@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Payments</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="/static/css/style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+<h3>⚡ ContractorPro</h3>
+
+<a href="/dashboard.html">🏠 Dashboard</a>
+
+<a href="/electricians.html">👷 Electricians</a>
+
+<a href="/jobs">💼 Jobs</a>
+
+<a href="/tasks">📋 Tasks</a>
+
+<a href="/materials">🧰 Materials</a>
+
+<a href="/reports">📊 Reports</a>
+
+<a href="/payments">💳 Payments</a>
+
+<a href="/profile">👤 Profile</a>
+
+<a href="/" class="text-warning">🚪 Logout</a>
+
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
+<!-- TOP -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+<div>
+
+<h1 class="fw-bold">
+💳 Payment Management
+</h1>
+
+<p class="text-muted">
+Manage transactions professionally
+</p>
+
+</div>
+
+</div>
+
+<!-- PAYMENT FORM -->
+<div class="card p-4 mb-5">
+
+<h4 class="mb-4">
+💸 Send Payment
+</h4>
+
+<form id="payment-form">
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+
+<label class="mb-2">
+Receiver Name
+</label>
+
+<input
+    type="text"
+    id="payer_name"
+    class="form-control"
+    placeholder="Enter Receiver Name"
+    required
+>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label class="mb-2">
+Amount
+</label>
+
+<input
+    type="number"
+    id="amount"
+    class="form-control"
+    placeholder="Enter Amount"
+    required
+>
+
+</div>
+
+</div>
+
+<button
+    type="button"
+    id="rzp-button"
+    class="btn btn-primary w-100 mt-3"
+>
+
+💳 Pay Now
+
+</button>
+
+</form>
+
+</div>
+
+<!-- TRANSACTION HISTORY -->
+<div class="card p-4">
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+<h4>
+📜 Transaction History
+</h4>
+
+</div>
+
+<div class="table-responsive">
+
+<table class="table align-middle">
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+<th>Payer</th>
+<th>Amount</th>
+<th>Status</th>
+<th>Date</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for payment in payments %}
+
+<tr>
+
+<td>{{ payment[0] }}</td>
+
+<td>{{ payment[1] }}</td>
+
+<td>₹ {{ payment[2] }}</td>
+
+<td>
+
+{% if payment[3] == "Success" %}
+
+<span class="badge bg-success">
+Success
+</span>
+
+{% else %}
+
+<span class="badge bg-danger">
+Failed
+</span>
+
+{% endif %}
+
+</td>
+
+<td>{{ payment[4] }}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- RAZORPAY -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+
+/* PAYMENT */
+document.getElementById("rzp-button").onclick = async function(e){
+
+    e.preventDefault();
+
+    const payer_name =
+        document.getElementById("payer_name").value;
+
+    const amount =
+        document.getElementById("amount").value;
+
+    const response = await fetch("/create_order", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type":
+            "application/x-www-form-urlencoded"
+        },
+
+        body:
+            `payer_name=${payer_name}&amount=${amount}`
+
+    });
+
+    const order = await response.json();
+
+    const options = {
+
+        "key": "{{ razorpay_key }}",
+
+        "amount": order.amount,
+
+        "currency": "INR",
+
+        "name": "ContractorPro",
+
+        "description":
+        "Professional Payment System",
+
+        "order_id": order.id,
+
+        "handler": function (response){
+
+            const form =
+                document.createElement("form");
+
+            form.method = "POST";
+
+            form.action = "/payment_success";
+
+            form.innerHTML = `
+
+                <input type="hidden"
+                    name="payer_name"
+                    value="${payer_name}">
+
+                <input type="hidden"
+                    name="amount"
+                    value="${amount}">
+
+                <input type="hidden"
+                    name="razorpay_payment_id"
+                    value="${response.razorpay_payment_id}">
+
+            `;
+
+            document.body.appendChild(form);
+
+            form.submit();
+        },
+
+        "theme": {
+            "color": "#2563eb"
+        }
+
+    };
+
+    const rzp = new Razorpay(options);
+
+    rzp.open();
+
+};
+
+</script>
+
+</body>
+</html>
